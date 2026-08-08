@@ -1,14 +1,15 @@
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
-}
+mod affirm_fs_error;
+mod compare_opt;
+mod contains_subslice;
+mod dir_structure;
+mod directory;
+mod file;
+mod sym_link;
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
-}
+pub use affirm_fs_error::AffirmFsError;
+pub use compare_opt::compare_opt;
+pub use contains_subslice::contains_subslice;
+pub use dir_structure::DirStructure;
+pub use directory::ADirectory;
+pub use file::AFile;
+pub use sym_link::ASymLink;
