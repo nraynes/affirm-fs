@@ -1,0 +1,21 @@
+[package]
+name = "affirm-fs"
+version = "0.1.0"
+edition = "2024"
+authors = ["Nicholas Raynes"]
+description = "Assert things about a file system. Inspired by assert-fs."
+license  = "MIT OR Apache-2.0"
+repository = "https://github.com/nraynes/affirm-fs"
+keywords = ["rust", "terminal", "command", "console", "tools"]
+categories = ["development-tools"]
+include = [
+    "src/",
+    "examples/",
+    "Cargo.toml",
+    "LICENSES/",
+    "LICENSE",
+    "README.md",
+    "CHANGELOG.md",
+]
+
+[dependencies]
