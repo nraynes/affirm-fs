@@ -1,5 +1,8 @@
 mod contains;
+mod matches;
+
 use contains::Contains;
+use matches::Matches;
 
 use derive_getters::Getters;
 
@@ -71,6 +74,18 @@ impl ADirectory {
         }
     }
 
+    pub fn directories_mut(&mut self) -> &mut HashMap<PathBuf, Self> {
+        &mut self.directories
+    }
+
+    pub fn files_mut(&mut self) -> &mut HashMap<PathBuf, AFile> {
+        &mut self.files
+    }
+
+    pub fn links_mut(&mut self) -> &mut HashMap<PathBuf, ASymLink> {
+        &mut self.links
+    }
+
     pub fn insert_dir(&mut self, value: Self) {
         self.directories.insert(value.path().clone(), value);
     }
@@ -85,6 +100,10 @@ impl ADirectory {
 
     pub fn contains<'a>(&'a self) -> Contains<'a> {
         Contains::new(self)
+    }
+
+    pub fn matches<'a>(&'a mut self) -> Matches<'a> {
+        Matches::new(self)
     }
 
     pub fn dir(&self, path: &Path) -> Option<&Self> {

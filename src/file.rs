@@ -64,7 +64,7 @@ impl AFile {
     }
 
     pub fn hash(&mut self) -> Result<String, AffirmFsError> {
-        Ok(sha256::digest(self.contents()?))
+        Ok(sha256::digest(fs::read(&self.path)?))
     }
 
     pub fn contains<'a>(&'a mut self) -> Contains<'a> {
