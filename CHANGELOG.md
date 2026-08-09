@@ -1,6 +1,6 @@
-# Version: v0.2.1
+# Version: v0.2.2
 
 ## Patches
 
-- fix: changed dir structure add dir to use str ref for name
+- fix: moved contents to lazy_load and added lazy loading of sym link pointer
 
