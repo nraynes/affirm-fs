@@ -1,12 +1,6 @@
-# Version: v0.1.0
+# Version: v0.2.0
 
 ## Features
 
-- feat: added directory structures and substructures
-
-## Maintenance Items
-
-- chore: change release branch to master
-- chore: init
-- chore: update runner
+- feat: added file contents getters and contains methods
 
