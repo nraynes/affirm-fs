@@ -42,6 +42,15 @@ impl TryFrom<PathBuf> for ADirectory {
 }
 
 impl ADirectory {
+    pub fn empty(path: PathBuf) -> Self {
+        Self {
+            path,
+            files: HashMap::new(),
+            directories: HashMap::new(),
+            links: HashMap::new(),
+        }
+    }
+
     pub fn insert_dir(&mut self, value: Self) {
         self.directories.insert(value.path().clone(), value);
     }

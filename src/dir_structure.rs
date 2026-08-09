@@ -1,30 +1,33 @@
+use std::path::Path;
+
 use crate::{ADirectory, AFile, ASymLink};
 
-#[derive(Default)]
 pub struct DirStructure {
     root: ADirectory,
 }
 
 impl DirStructure {
-    pub fn new() -> Self {
-        Self::default()
+    pub fn new(path: &Path) -> Self {
+        Self {
+            root: ADirectory::empty(path.to_path_buf()),
+        }
     }
 
-    pub fn dir<F>(mut self, f: F) -> Self
+    pub fn dir<F>(mut self, path: &Path, f: F) -> Self
     where
         F: Fn(Self) -> ADirectory,
     {
-        self.root.insert_dir(f(Self::new()));
+        self.root.insert_dir(f(Self::new(path)));
         self
     }
 
-    pub fn file(mut self, value: AFile) -> Self {
-        self.root.insert_file(value);
+    pub fn file(mut self, value: &str) -> Self {
+        self.root.insert_file(AFile::from(value));
         self
     }
 
-    pub fn link(mut self, value: ASymLink) -> Self {
-        self.root.insert_link(value);
+    pub fn link(mut self, value: &str) -> Self {
+        self.root.insert_link(ASymLink::from(value));
         self
     }
 

@@ -10,6 +10,12 @@ pub struct ASymLink {
     path: PathBuf,
 }
 
+impl From<&str> for ASymLink {
+    fn from(value: &str) -> Self {
+        Self::new(PathBuf::from(value))
+    }
+}
+
 impl TryFrom<PathBuf> for ASymLink {
     type Error = AffirmFsError;
 
