@@ -1,6 +1,6 @@
-# Version: v0.3.1
+# Version: v0.3.2
 
 ## Patches
 
-- fix: added ability to match directories
+- fix: added mutable getters
 
