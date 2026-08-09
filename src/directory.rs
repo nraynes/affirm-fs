@@ -3,7 +3,11 @@ use contains::Contains;
 
 use derive_getters::Getters;
 
-use std::{collections::HashMap, fs, path::PathBuf};
+use std::{
+    collections::HashMap,
+    fs::{self, canonicalize},
+    path::PathBuf,
+};
 
 use derive_new::new;
 
@@ -29,7 +33,7 @@ impl TryFrom<PathBuf> for ADirectory {
             let path = dir_entry?.path();
 
             if path.is_dir() {
-                directories.insert(path.clone(), Self::try_from(path)?);
+                directories.insert(canonicalize(&path)?, Self::try_from(path)?);
             } else if path.is_file() {
                 files.insert(path.clone(), AFile::try_from(path)?);
             } else if path.is_symlink() {

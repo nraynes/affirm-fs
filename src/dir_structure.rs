@@ -13,11 +13,12 @@ impl DirStructure {
         }
     }
 
-    pub fn dir<F>(mut self, path: &Path, f: F) -> Self
+    pub fn dir<F>(mut self, name: &str, f: F) -> Self
     where
         F: Fn(Self) -> ADirectory,
     {
-        self.root.insert_dir(f(Self::new(path)));
+        self.root
+            .insert_dir(f(Self::new(&self.root.path().join(name))));
         self
     }
 
