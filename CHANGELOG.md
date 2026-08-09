@@ -1,6 +1,6 @@
-# Version: v0.3.0
+# Version: v0.3.1
 
-## Features
+## Patches
 
-- feat: added matching and hashing for files
+- fix: added ability to match directories
 
