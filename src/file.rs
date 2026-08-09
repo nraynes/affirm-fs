@@ -8,7 +8,7 @@ use derive_new::new;
 
 use crate::{AffirmFsError, LazyLoad};
 
-#[derive(new, PartialEq, Eq, PartialOrd, Ord, Clone)]
+#[derive(new, PartialEq, Eq, PartialOrd, Ord, Clone, Debug)]
 pub struct AFile {
     path: PathBuf,
     contents: LazyLoad<Vec<u8>>,

@@ -1,6 +1,6 @@
 use crate::AffirmFsError;
 
-#[derive(PartialEq, Eq, PartialOrd, Ord, Clone)]
+#[derive(PartialEq, Eq, PartialOrd, Ord, Clone, Debug)]
 pub enum LazyLoad<T> {
     /// Indicates that the item has yet to be retrieved.
     Stale,

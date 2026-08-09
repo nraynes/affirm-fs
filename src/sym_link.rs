@@ -4,7 +4,7 @@ use derive_new::new;
 
 use crate::{AffirmFsError, LazyLoad};
 
-#[derive(new, PartialEq, Eq, PartialOrd, Ord, Clone)]
+#[derive(new, PartialEq, Eq, PartialOrd, Ord, Clone, Debug)]
 pub struct ASymLink {
     path: PathBuf,
     links_to: LazyLoad<PathBuf>,

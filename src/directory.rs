@@ -13,7 +13,7 @@ use derive_new::new;
 
 use crate::{AFile, ASymLink, AffirmFsError};
 
-#[derive(Getters, new, PartialEq, Eq, Default, Clone)]
+#[derive(Getters, new, PartialEq, Eq, Default, Clone, Debug)]
 pub struct ADirectory {
     path: PathBuf,
     files: HashMap<PathBuf, AFile>,
