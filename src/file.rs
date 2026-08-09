@@ -1,6 +1,8 @@
 mod contains;
+mod matches;
 
 use contains::Contains;
+use matches::Matches;
 
 use std::{fs, path::PathBuf};
 
@@ -61,7 +63,15 @@ impl AFile {
         }
     }
 
+    pub fn hash(&mut self) -> Result<String, AffirmFsError> {
+        Ok(sha256::digest(self.contents()?))
+    }
+
     pub fn contains<'a>(&'a mut self) -> Contains<'a> {
         Contains::new(self)
+    }
+
+    pub fn matches<'a>(&'a mut self) -> Matches<'a> {
+        Matches::new(self)
     }
 }
