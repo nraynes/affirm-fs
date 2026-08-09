@@ -128,6 +128,28 @@ impl ADirectory {
         None
     }
 
+    pub fn dir_mut(&mut self, path: &Path) -> Option<&mut Self> {
+        let parsed_path = if path.is_relative() {
+            path.to_path_buf()
+        } else {
+            path.canonicalize()
+                .ok()?
+                .strip_prefix(&self.path)
+                .ok()?
+                .to_path_buf()
+        };
+        let mut path_iter = parsed_path.into_iter();
+        if let Some(next) = path_iter.next() {
+            let path_to_next = self.path.join(next);
+            if let Some(next_dir) = self.directories_mut().get_mut(&path_to_next) {
+                return next_dir.dir_mut(path_iter.as_path());
+            }
+        } else {
+            return Some(self);
+        }
+        None
+    }
+
     pub fn file(&self, path: &Path) -> Option<&AFile> {
         if let Some(parent_path) = path.parent()
             && let Some(parent_dir) = self.dir(parent_path)
@@ -139,6 +161,16 @@ impl ADirectory {
         None
     }
 
+    pub fn file_mut(&mut self, path: &Path) -> Option<&mut AFile> {
+        if let Some(parent_path) = path.parent()
+            && let Some(parent_dir) = self.dir_mut(parent_path)
+        {
+            let child_path = parent_dir.path().join(path.file_name()?);
+            return parent_dir.files_mut().get_mut(&child_path);
+        }
+        None
+    }
+
     pub fn link(&self, path: &Path) -> Option<&ASymLink> {
         if let Some(parent_path) = path.parent()
             && let Some(parent_dir) = self.dir(parent_path)
@@ -146,6 +178,16 @@ impl ADirectory {
             return parent_dir
                 .links()
                 .get(&parent_dir.path().join(path.file_name()?));
+        }
+        None
+    }
+
+    pub fn link_mut(&mut self, path: &Path) -> Option<&mut ASymLink> {
+        if let Some(parent_path) = path.parent()
+            && let Some(parent_dir) = self.dir_mut(parent_path)
+        {
+            let child_path = parent_dir.path().join(path.file_name()?);
+            return parent_dir.links_mut().get_mut(&child_path);
         }
         None
     }
