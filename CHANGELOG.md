@@ -1,6 +1,6 @@
-# Version: v0.2.0
+# Version: v0.2.1
 
-## Features
+## Patches
 
-- feat: added file contents getters and contains methods
+- fix: changed dir structure add dir to use str ref for name
 
