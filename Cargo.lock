@@ -4,7 +4,7 @@ version = 4
 
 [[package]]
 name = "affirm-fs"
-version = "0.2.5"
+version = "0.3.0"
 dependencies = [
  "derive-getters",
  "derive-new",

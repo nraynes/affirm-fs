@@ -1,6 +1,6 @@
-# Version: v0.2.5
+# Version: v0.3.0
 
-## Patches
+## Features
 
-- fix: added debug trait to file structures
+- feat: added matching and hashing for files
 
