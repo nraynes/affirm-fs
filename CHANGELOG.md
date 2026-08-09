@@ -1,6 +1,6 @@
-# Version: v0.2.3
+# Version: v0.2.4
 
 ## Patches
 
-- fix: added multiple tryfrom implementations for adirectory
+- fix: added ability to traverse directory for files using paths
 
