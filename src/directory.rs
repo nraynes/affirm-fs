@@ -86,4 +86,48 @@ impl ADirectory {
     pub fn contains<'a>(&'a self) -> Contains<'a> {
         Contains::new(self)
     }
+
+    pub fn dir(&self, path: &Path) -> Option<&Self> {
+        let parsed_path = if path.is_relative() {
+            path.to_path_buf()
+        } else {
+            path.canonicalize()
+                .ok()?
+                .strip_prefix(&self.path)
+                .ok()?
+                .to_path_buf()
+        };
+        let mut path_iter = parsed_path.into_iter();
+        if let Some(next) = path_iter.next() {
+            let path_to_next = self.path.join(next);
+            if let Some(next_dir) = self.directories().get(&path_to_next) {
+                return next_dir.dir(path_iter.as_path());
+            }
+        } else {
+            return Some(self);
+        }
+        None
+    }
+
+    pub fn file(&self, path: &Path) -> Option<&AFile> {
+        if let Some(parent_path) = path.parent()
+            && let Some(parent_dir) = self.dir(parent_path)
+        {
+            return parent_dir
+                .files()
+                .get(&parent_dir.path().join(path.file_name()?));
+        }
+        None
+    }
+
+    pub fn link(&self, path: &Path) -> Option<&ASymLink> {
+        if let Some(parent_path) = path.parent()
+            && let Some(parent_dir) = self.dir(parent_path)
+        {
+            return parent_dir
+                .links()
+                .get(&parent_dir.path().join(path.file_name()?));
+        }
+        None
+    }
 }

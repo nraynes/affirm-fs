@@ -53,4 +53,25 @@ impl<'a> Contains<'a> {
         }
         false
     }
+
+    pub fn file_named(&self, value: &str) -> bool {
+        self.value
+            .files()
+            .get(&self.value.path().join(value))
+            .is_some()
+    }
+
+    pub fn link_named(&self, value: &str) -> bool {
+        self.value
+            .links()
+            .get(&self.value.path().join(value))
+            .is_some()
+    }
+
+    pub fn dir_named(&self, value: &str) -> bool {
+        self.value
+            .directories()
+            .get(&self.value.path().join(value))
+            .is_some()
+    }
 }
