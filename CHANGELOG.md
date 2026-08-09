@@ -1,6 +1,6 @@
-# Version: v0.2.4
+# Version: v0.2.5
 
 ## Patches
 
-- fix: added ability to traverse directory for files using paths
+- fix: added debug trait to file structures
 
