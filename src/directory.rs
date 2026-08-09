@@ -6,7 +6,7 @@ use derive_getters::Getters;
 use std::{
     collections::HashMap,
     fs::{self, canonicalize},
-    path::PathBuf,
+    path::{Path, PathBuf},
 };
 
 use derive_new::new;
@@ -21,10 +21,10 @@ pub struct ADirectory {
     links: HashMap<PathBuf, ASymLink>,
 }
 
-impl TryFrom<PathBuf> for ADirectory {
+impl TryFrom<&Path> for ADirectory {
     type Error = AffirmFsError;
 
-    fn try_from(value: PathBuf) -> Result<Self, Self::Error> {
+    fn try_from(value: &Path) -> Result<Self, Self::Error> {
         let mut files = HashMap::new();
         let mut directories = HashMap::new();
         let mut links = HashMap::new();
@@ -41,7 +41,23 @@ impl TryFrom<PathBuf> for ADirectory {
             }
         }
 
-        Ok(Self::new(value, files, directories, links))
+        Ok(Self::new(value.to_path_buf(), files, directories, links))
+    }
+}
+
+impl TryFrom<&PathBuf> for ADirectory {
+    type Error = AffirmFsError;
+
+    fn try_from(value: &PathBuf) -> Result<Self, Self::Error> {
+        Self::try_from(value.as_path())
+    }
+}
+
+impl TryFrom<PathBuf> for ADirectory {
+    type Error = AffirmFsError;
+
+    fn try_from(value: PathBuf) -> Result<Self, Self::Error> {
+        Self::try_from(value.as_path())
     }
 }
 
