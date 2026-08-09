@@ -1,24 +1,22 @@
 mod contains;
-mod contents;
 
 use contains::Contains;
-use contents::Contents;
 
 use std::{fs, path::PathBuf};
 
 use derive_new::new;
 
-use crate::AffirmFsError;
+use crate::{AffirmFsError, LazyLoad};
 
 #[derive(new, PartialEq, Eq, PartialOrd, Ord, Clone)]
 pub struct AFile {
     path: PathBuf,
-    contents: Contents,
+    contents: LazyLoad<Vec<u8>>,
 }
 
 impl From<&str> for AFile {
     fn from(value: &str) -> Self {
-        Self::new(PathBuf::from(value), Contents::Stale)
+        Self::new(PathBuf::from(value), LazyLoad::Stale)
     }
 }
 
@@ -27,7 +25,7 @@ impl TryFrom<PathBuf> for AFile {
 
     fn try_from(value: PathBuf) -> Result<Self, Self::Error> {
         if value.is_file() {
-            return Ok(Self::new(value, Contents::Stale));
+            return Ok(Self::new(value, LazyLoad::Stale));
         }
         Err(AffirmFsError::from(format!(
             "File not found at {:?}",
@@ -37,13 +35,13 @@ impl TryFrom<PathBuf> for AFile {
 }
 
 impl AFile {
-    fn update_contents(&mut self) {
+    fn retrieve_contents(&mut self) {
         match fs::read(&self.path) {
             Ok(file_contents) => {
-                self.contents = Contents::Has(file_contents);
+                self.contents = LazyLoad::Has(file_contents);
             }
             Err(e) => {
-                self.contents = Contents::Err(AffirmFsError::from(e));
+                self.contents = LazyLoad::Err(AffirmFsError::from(e));
             }
         }
     }
@@ -53,13 +51,13 @@ impl AFile {
     }
 
     pub fn contents(&mut self) -> Result<&[u8], AffirmFsError> {
-        if self.contents == Contents::Stale {
-            self.update_contents();
+        if self.contents == LazyLoad::Stale {
+            self.retrieve_contents();
         }
         match &self.contents {
-            Contents::Stale => Err(AffirmFsError::from("Could not retrieve file contents.")),
-            Contents::Has(file_contents) => Ok(file_contents),
-            Contents::Err(e) => Err(e.clone()),
+            LazyLoad::Stale => Err(AffirmFsError::from("Could not retrieve file contents.")),
+            LazyLoad::Has(file_contents) => Ok(file_contents),
+            LazyLoad::Err(e) => Err(e.clone()),
         }
     }
 

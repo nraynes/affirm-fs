@@ -4,6 +4,7 @@ mod contains_subslice;
 mod dir_structure;
 mod directory;
 mod file;
+mod lazy_load;
 mod sym_link;
 
 pub use affirm_fs_error::AffirmFsError;
@@ -12,4 +13,5 @@ pub use contains_subslice::contains_subslice;
 pub use dir_structure::DirStructure;
 pub use directory::ADirectory;
 pub use file::AFile;
+pub use lazy_load::LazyLoad;
 pub use sym_link::ASymLink;
