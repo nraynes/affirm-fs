@@ -1,6 +1,6 @@
-# Version: v0.2.2
+# Version: v0.2.3
 
 ## Patches
 
-- fix: moved contents to lazy_load and added lazy loading of sym link pointer
+- fix: added multiple tryfrom implementations for adirectory
 
