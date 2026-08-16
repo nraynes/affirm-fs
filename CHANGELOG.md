@@ -1,6 +1,6 @@
-# Version: v0.3.2
+# Version: v0.4.0
 
-## Patches
+## Features
 
-- fix: added mutable getters
+- feat: added tests and more functionality
 
