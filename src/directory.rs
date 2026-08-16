@@ -27,6 +27,7 @@ pub struct Directory {
     directories: HashMap<PathBuf, Self>,
 }
 
+/// Attempts to create Self that matches the directory and file structure of a specific path on disk.
 impl TryFrom<&Path> for Directory {
     type Error = AffirmFsError;
 
@@ -99,7 +100,13 @@ impl Directory {
         Ne::new(self)
     }
 
-    pub fn dir(&self, path: &Path) -> Option<&Self> {
+    /// Gets the directory at the given path, if it exists.
+    /// The given path can be either an absolute path with the prefix to the absolute path matching this directory's path,
+    /// or a relative path that is relative to this directory's path.
+    /// The directory structure will be traversed to retrieve a directory that is multiple subdirectories into the structure.
+    /// If the directory cannot be found or an invalid path is given, None is returned.
+    pub fn dir<P: AsRef<Path>>(&self, path: P) -> Option<&Self> {
+        let path = path.as_ref();
         let parsed_path = if path.is_relative() {
             path.to_path_buf()
         } else {
@@ -121,7 +128,13 @@ impl Directory {
         None
     }
 
-    pub fn file(&self, path: &Path) -> Option<&File> {
+    /// Gets the file at the given path, if it exists.
+    /// The given path can be either an absolute path with the prefix to the absolute path matching this directory's path,
+    /// or a relative path that is relative to this directory's path.
+    /// The directory structure will be traversed to retrieve a file that is multiple subdirectories into the structure.
+    /// If the file cannot be found or an invalid path is given, None is returned.
+    pub fn file<P: AsRef<Path>>(&self, path: P) -> Option<&File> {
+        let path = path.as_ref();
         if let Some(parent_path) = path.parent()
             && let Some(parent_dir) = self.dir(parent_path)
         {

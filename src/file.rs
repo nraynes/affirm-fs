@@ -47,6 +47,7 @@ impl From<(PathBuf, &str)> for File {
     }
 }
 
+/// Attempts to create Self that matches a file for a specific path on disk.
 impl TryFrom<&Path> for File {
     type Error = AffirmFsError;
 
