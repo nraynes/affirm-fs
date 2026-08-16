@@ -1,14 +1,15 @@
 use derive_new::new;
 
-use crate::{AFile, AffirmFsError, contains_subslice};
+use crate::{AffirmFsError, File, contains_subslice};
 
 #[derive(new)]
 pub struct Contains<'a> {
-    value: &'a mut AFile,
+    value: &'a File,
 }
 
 impl<'a> Contains<'a> {
-    pub fn content<T>(&mut self, value: T) -> Result<bool, AffirmFsError>
+    /// Checks for whether the provided byte slice is present in the files contents.
+    pub fn content<T>(&self, value: T) -> Result<bool, AffirmFsError>
     where
         T: AsRef<[u8]>,
     {
