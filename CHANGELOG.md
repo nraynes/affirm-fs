@@ -1,6 +1,6 @@
-# Version: v0.4.0
+# Version: v0.4.1
 
-## Features
+## Patches
 
-- feat: added tests and more functionality
+- fix: added more tests to cover missing cases and made searching dirs more versatile
 
