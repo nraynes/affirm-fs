@@ -1,6 +1,6 @@
-# Version: v0.4.1
+# Version: v0.5.0
 
-## Patches
+## Features
 
-- fix: added more tests to cover missing cases and made searching dirs more versatile
+- feat: added ability to acquire contents in memory
 
