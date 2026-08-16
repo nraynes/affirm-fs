@@ -67,8 +67,17 @@ impl File {
         &self.path
     }
 
+    /// Gets the contents of this file once and returns it as a byte vector.
     pub fn contents(&self) -> Result<Vec<u8>, AffirmFsError> {
         Ok(fs::read(&self.path)?)
+    }
+
+    /// Gets the contents of this file and caches it in memory for making matching decisions later on.
+    /// If static_contents is already set, this will overwrite it.
+    /// Use with caution for larger files!
+    pub fn hold_contents_as_static(&mut self) -> Result<(), AffirmFsError> {
+        self.static_content = Some(self.contents()?);
+        Ok(())
     }
 
     pub fn hash(&self) -> Result<String, AffirmFsError> {

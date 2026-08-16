@@ -74,6 +74,28 @@ impl Directory {
         }
     }
 
+    /// Will acquire the contents of all files in this directory and all subdirectories for making matching decisions
+    /// later on. Use with Extreme Caution! Larger files can cause crashes!
+    pub fn acquire_contents(&mut self) -> Result<(), AffirmFsError> {
+        // Acquire file contents in this directory.
+        for file in self.files.values_mut() {
+            file.hold_contents_as_static()?;
+        }
+
+        // Acquire file contents for all files in subdirectories.
+        for directory in self.directories.values_mut() {
+            directory.acquire_contents()?;
+        }
+
+        Ok(())
+    }
+
+    /// Takes ownership of directory to acquire contents then returns ownership to maintain immutability after modification.
+    pub fn take_and_acquire_contents(mut self) -> Result<Self, AffirmFsError> {
+        self.acquire_contents()?;
+        Ok(self)
+    }
+
     pub fn insert_dir(mut self, value: Self) -> Self {
         self.directories.insert(value.path().clone(), value);
         self
