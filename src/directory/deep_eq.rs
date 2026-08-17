@@ -80,17 +80,8 @@ impl<'a> DeepEq<'a> {
 
     /// Checks that all files in this directory and all subdirectories contents matches the contents of the
     /// respective files in the other directory. Only the final component of the path is compared.
-    pub fn dir_contents(&self, value: &Directory) -> Result<bool, AffirmFsError> {
-        if self
-            .value
-            .path()
-            .file_name()
-            .ok_or("Could not retrieve file name of path to self.")?
-            != value
-                .path()
-                .file_name()
-                .ok_or("Could not retrieve the file name of given directory.")?
-            || !self.check_contents_count(value)
+    pub fn dir_weak(&self, value: &Directory) -> Result<bool, AffirmFsError> {
+        if !self.check_contents_count(value)
             || !self.match_files_and(
                 value,
                 |tf, of| tf.deep_eq().file_contents(of),
@@ -102,7 +93,7 @@ impl<'a> DeepEq<'a> {
             )?
             || !self.match_dirs_and(
                 value,
-                |td, od| td.deep_eq().dir_contents(od),
+                |td, od| td.deep_eq().dir_weak(od),
                 |dp| {
                     Ok(value
                         .path()

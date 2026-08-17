@@ -63,5 +63,5 @@ fn with_path_end() {
     .file_with_contents("f3", "Test content for f3.")
     .build();
 
-    assert!(test_dir.deep_eq().dir_contents(&dir_structure).unwrap());
+    assert!(test_dir.deep_eq().dir_weak(&dir_structure).unwrap());
 }
