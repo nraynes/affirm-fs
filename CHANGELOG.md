@@ -1,6 +1,6 @@
-# Version: v0.5.3
+# Version: v0.5.4
 
 ## Patches
 
-- fix: added weak path matching
+- fix: fixed dir_weak
 
