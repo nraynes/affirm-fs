@@ -1,6 +1,6 @@
-# Version: v0.5.1
+# Version: v0.5.2
 
 ## Patches
 
-- fix: fixed deep eq
+- fix: removed debug lines
 
