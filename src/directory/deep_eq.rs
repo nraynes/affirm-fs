@@ -25,7 +25,6 @@ impl<'a> DeepEq<'a> {
         f_file_path: G,
     ) -> Result<bool, AffirmFsError> {
         for (file_path, this_file) in self.value.files() {
-            println!("file: {:?}", value);
             if let Some(other_file) = value.files().get(&f_file_path(file_path)?) {
                 if !f_path_condition(this_file, other_file)? {
                     return Ok(false);
@@ -48,7 +47,6 @@ impl<'a> DeepEq<'a> {
     ) -> Result<bool, AffirmFsError> {
         for (dir_path, this_dir) in self.value.directories() {
             if let Some(other_dir) = value.directories().get(&f_dir_path(dir_path)?) {
-                println!("dir: {:?}", other_dir);
                 if !f_path_condition(this_dir, other_dir)? {
                     return Ok(false);
                 }
