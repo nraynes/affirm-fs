@@ -1,6 +1,8 @@
+use std::path::PathBuf;
+
 use derive_new::new;
 
-use crate::{AffirmFsError, Directory};
+use crate::{AffirmFsError, Directory, File};
 
 #[derive(new)]
 pub struct DeepEq<'a> {
@@ -8,46 +10,110 @@ pub struct DeepEq<'a> {
 }
 
 impl<'a> DeepEq<'a> {
+    fn check_contents_count(&self, value: &Directory) -> bool {
+        self.value.files().len() == value.files().len()
+            && self.value.directories().len() == value.directories().len()
+    }
+
+    fn match_files_and<
+        F: Fn(&File, &File) -> Result<bool, AffirmFsError>,
+        G: Fn(&PathBuf) -> Result<PathBuf, AffirmFsError>,
+    >(
+        &self,
+        value: &Directory,
+        f_path_condition: F,
+        f_file_path: G,
+    ) -> Result<bool, AffirmFsError> {
+        for (file_path, this_file) in self.value.files() {
+            println!("file: {:?}", value);
+            if let Some(other_file) = value.files().get(&f_file_path(file_path)?) {
+                if !f_path_condition(this_file, other_file)? {
+                    return Ok(false);
+                }
+            } else {
+                return Ok(false);
+            }
+        }
+        Ok(true)
+    }
+
+    fn match_dirs_and<
+        F: Fn(&Directory, &Directory) -> Result<bool, AffirmFsError>,
+        G: Fn(&PathBuf) -> Result<PathBuf, AffirmFsError>,
+    >(
+        &self,
+        value: &Directory,
+        f_path_condition: F,
+        f_dir_path: G,
+    ) -> Result<bool, AffirmFsError> {
+        for (dir_path, this_dir) in self.value.directories() {
+            if let Some(other_dir) = value.directories().get(&f_dir_path(dir_path)?) {
+                println!("dir: {:?}", other_dir);
+                if !f_path_condition(this_dir, other_dir)? {
+                    return Ok(false);
+                }
+            } else {
+                return Ok(false);
+            }
+        }
+        Ok(true)
+    }
+
     /// Checks that this directory is exactly equal to another directory, and that all files in this directory
     /// and all subdirectories contents matches the contents of the respective files in the other directory.
     pub fn dir(&self, value: &Directory) -> Result<bool, AffirmFsError> {
-        // Match paths.
-        if self.value.path() != value.path() {
+        if self.value.path() != value.path()
+            || !self.check_contents_count(value)
+            || !self.match_files_and(
+                value,
+                |tf, of| tf.deep_eq().file(of),
+                |fp| Ok(fp.to_path_buf()),
+            )?
+            || !self.match_dirs_and(
+                value,
+                |td, od| td.deep_eq().dir(od),
+                |dp| Ok(dp.to_path_buf()),
+            )?
+        {
             return Ok(false);
         }
+        Ok(true)
+    }
 
-        // Check file count.
-        if self.value.files().len() != value.files().len() {
+    /// Checks that all files in this directory and all subdirectories contents matches the contents of the
+    /// respective files in the other directory. Only the final component of the path is compared.
+    pub fn dir_contents(&self, value: &Directory) -> Result<bool, AffirmFsError> {
+        if self
+            .value
+            .path()
+            .file_name()
+            .ok_or("Could not retrieve file name of path to self.")?
+            != value
+                .path()
+                .file_name()
+                .ok_or("Could not retrieve the file name of given directory.")?
+            || !self.check_contents_count(value)
+            || !self.match_files_and(
+                value,
+                |tf, of| tf.deep_eq().file_contents(of),
+                |fp| {
+                    Ok(value
+                        .path()
+                        .join(fp.file_name().ok_or("Could not extract file name.")?))
+                },
+            )?
+            || !self.match_dirs_and(
+                value,
+                |td, od| td.deep_eq().dir_contents(od),
+                |dp| {
+                    Ok(value
+                        .path()
+                        .join(dp.file_name().ok_or("Could not extract directory name.")?))
+                },
+            )?
+        {
             return Ok(false);
         }
-
-        // Check directory count.
-        if self.value.directories().len() != value.directories().len() {
-            return Ok(false);
-        }
-
-        // Match files.
-        for (file_path, this_file) in self.value.files() {
-            if let Some(other_file) = value.files().get(file_path) {
-                if !this_file.deep_eq().file(other_file)? {
-                    return Ok(false);
-                }
-            } else {
-                return Ok(false);
-            }
-        }
-
-        // Match directories.
-        for (dir_path, this_dir) in self.value.directories() {
-            if let Some(other_dir) = value.directories().get(dir_path) {
-                if !this_dir.deep_eq().dir(other_dir)? {
-                    return Ok(false);
-                }
-            } else {
-                return Ok(false);
-            }
-        }
-
         Ok(true)
     }
 }
