@@ -1,6 +1,6 @@
-# Version: v0.5.0
+# Version: v0.5.1
 
-## Features
+## Patches
 
-- feat: added ability to acquire contents in memory
+- fix: fixed deep eq
 
