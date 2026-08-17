@@ -1,6 +1,6 @@
-# Version: v0.5.2
+# Version: v0.5.3
 
 ## Patches
 
-- fix: removed debug lines
+- fix: added weak path matching
 
