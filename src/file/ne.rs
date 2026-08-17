@@ -1,6 +1,6 @@
 use derive_new::new;
 
-use crate::{AffirmFsError, File};
+use crate::{AffirmFsError, File, file::eq::Eq};
 
 #[derive(new)]
 pub struct Ne<'a> {
@@ -11,6 +11,11 @@ impl<'a> Ne<'a> {
     /// Checks if this files path does not match that of the provided file.
     pub fn file(&self, value: &File) -> bool {
         self.value.path() != value.path()
+    }
+
+    /// Checks if this files path does not match that of the provided file. Uses final component of path for comparison.
+    pub fn file_name(&self, value: &File) -> Result<bool, AffirmFsError> {
+        Ok(!Eq::new(self.value).file_name(value)?)
     }
 
     /// Checks whether the contents of this file is not equal to some content by hashing the contents and
