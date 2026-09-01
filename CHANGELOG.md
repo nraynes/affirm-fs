@@ -1,6 +1,6 @@
-# Version: v0.5.4
+# Version: v0.5.5
 
 ## Patches
 
-- fix: fixed dir_weak
+- fix: fixed file try from method
 
