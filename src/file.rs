@@ -80,6 +80,11 @@ impl File {
         Ok(())
     }
 
+    pub fn take_and_hold_contents_as_static(mut self) -> Result<Self, AffirmFsError> {
+        self.static_content = Some(self.contents()?);
+        Ok(self)
+    }
+
     pub fn hash(&self) -> Result<String, AffirmFsError> {
         Ok(sha256::digest(fs::read(&self.path)?))
     }
