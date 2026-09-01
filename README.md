@@ -1,3 +1,9 @@
+# Affirm-FS
+
+With affirm-fs, you can easily test file system stru
+
+This project was inspired by assert-fs. 
+
 ## License
 
 This work is dual-licensed under MIT and Apache 2.0.

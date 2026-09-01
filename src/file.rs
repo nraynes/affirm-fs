@@ -52,7 +52,7 @@ impl TryFrom<&Path> for File {
     type Error = AffirmFsError;
 
     fn try_from(value: &Path) -> Result<Self, Self::Error> {
-        if value.is_file() {
+        if value.is_file() && fs::exists(value)? {
             return Ok(Self::new(value.to_path_buf(), None));
         }
         Err(AffirmFsError::from(format!(
