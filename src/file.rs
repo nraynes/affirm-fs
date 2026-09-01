@@ -52,8 +52,15 @@ impl TryFrom<&Path> for File {
     type Error = AffirmFsError;
 
     fn try_from(value: &Path) -> Result<Self, Self::Error> {
-        if value.is_file() {
-            return Ok(Self::new(value.to_path_buf(), None));
+        if fs::exists(value)? {
+            if value.is_file() {
+                return Ok(Self::new(value.to_path_buf(), None));
+            } else {
+                return Err(AffirmFsError::from(format!(
+                    "Path at {:?} is not a file.",
+                    value
+                )));
+            }
         }
         Err(AffirmFsError::from(format!(
             "File not found at {:?}",
