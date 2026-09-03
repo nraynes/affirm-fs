@@ -35,12 +35,6 @@ impl From<(&str, &str)> for File {
     }
 }
 
-impl From<PathBuf> for File {
-    fn from(value: PathBuf) -> Self {
-        Self::new(value, None)
-    }
-}
-
 impl From<(PathBuf, &str)> for File {
     fn from(value: (PathBuf, &str)) -> Self {
         Self::new(value.0, Some(value.1.as_bytes().to_vec()))
@@ -69,9 +63,29 @@ impl TryFrom<&Path> for File {
     }
 }
 
+impl TryFrom<PathBuf> for File {
+    type Error = AffirmFsError;
+
+    fn try_from(value: PathBuf) -> Result<Self, Self::Error> {
+        Self::try_from(value.as_path())
+    }
+}
+
+impl TryFrom<&PathBuf> for File {
+    type Error = AffirmFsError;
+
+    fn try_from(value: &PathBuf) -> Result<Self, Self::Error> {
+        Self::try_from(value.as_path())
+    }
+}
+
 impl File {
     pub fn path(&self) -> &PathBuf {
         &self.path
+    }
+
+    pub fn empty(value: PathBuf) -> Self {
+        Self::new(value, None)
     }
 
     /// Gets the contents of this file once and returns it as a byte vector.

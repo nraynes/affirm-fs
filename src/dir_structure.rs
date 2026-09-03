@@ -25,7 +25,7 @@ impl DirStructure {
 
     pub fn file(mut self, name: &str) -> Self {
         let path = self.root.path().join(name);
-        self.root = self.root.insert_file(File::from(path));
+        self.root = self.root.insert_file(File::empty(path));
         self
     }
 
