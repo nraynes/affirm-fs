@@ -2,6 +2,7 @@ use std::path::{Path, PathBuf};
 
 use crate::{Directory, File};
 
+#[derive(Debug)]
 pub struct DirStructure {
     root: Directory,
 }
