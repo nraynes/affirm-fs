@@ -1,6 +1,6 @@
-# Version: v0.5.8
+# Version: v0.5.9
 
 ## Patches
 
-- fix: added debug derive to dir structure
+- fix: fixed try_from method on files
 
